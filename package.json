@@ -1,0 +1,32 @@
+{
+  "name": "ctfbotv2",
+  "version": "1.0.0",
+  "description": "An all new and improved version of my multiplayer event management bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmrPaper/CTFBotV2.git"
+  },
+  "author": "AmrPaper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmrPaper/CTFBotV2/issues"
+  },
+  "homepage": "https://github.com/AmrPaper/CTFBotV2#readme",
+  "dependencies": {
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.1",
+    "jest": "^30.0.5",
+    "mongoose": "^8.18.0",
+    "node": "^24.6.0",
+    "winston": "^3.17.0",
+    "zod": "^4.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  },
+  "type": "module"
+}
