@@ -1,0 +1,45 @@
+{
+    "name": "Event name",
+    "author": "Author's name/username",
+    "comment": "Author's comment",
+    "tags": ["tag1","tag2","tag3"],
+    "description": "Event description",
+    "phases": [
+        {
+            "id": 0,
+            "name": "phase name",
+            "description": "phase description",
+            "challengeText": "Lorem Ipsum",
+            "flag": "PaperCTF={flag_text1}",
+            "files": ["link1", "link2"],
+            "timeLimit": null,
+            "color": "#FFFFFF"
+        },
+        {
+            "id": 1,
+            "name": "phase name",
+            "description": "phase description",
+            "challengeText": "Lorem Ipsum",
+            "flag": "PaperCTF={flag_text2}",
+            "files": ["link1", "link2"],
+            "timeLimit": 60,
+            "color": "#F0F0F0"
+        }
+    ],
+    "endings": {
+        "ending1": {
+            "title": "ending title",
+            "description": "ending description",
+            "color": "#FFFFFF",
+            "message": "ending message",
+            "condition": "LT"
+        },
+        "ending2": {
+            "title": "ending title",
+            "description": "ending description",
+            "color": "#FFFFFF",
+            "message": "ending message",
+            "condition": "LT"
+        }
+    }
+}

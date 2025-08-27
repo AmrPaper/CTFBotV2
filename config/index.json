@@ -1,0 +1,6 @@
+{
+    "activeSet": "template",
+    "sets": {
+        "1": "./config/template.json"
+    }
+}
