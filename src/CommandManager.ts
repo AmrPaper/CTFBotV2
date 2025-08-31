@@ -1,0 +1,38 @@
+import type { Message } from "discord.js";
+import init from "./commands/admin/init.js";
+
+const prefix = "$";
+
+type commandHandler = (msg: Message, args: string[]) => void | Promise<void>;
+
+const commandHandlers: Record<string, commandHandler> = {
+    "init": init,
+    "blip": async (msg) => {
+        if (!msg.guild) {return console.log("Invalid Operation, no dms");}
+        const user = await msg.guild.members.fetch(msg.author.id)
+        const roles = user.roles.cache.map(r => r.name);
+        console.log(roles);
+        msg.reply("User roles logged!");
+    },
+    "bloop": (msg) => {
+        console.log(msg.author);
+        console.log(msg.author.id)
+        msg.reply("User info logged!");
+    }
+}
+
+function messageHandling(msg: Message) {
+    if (msg.author.bot || !msg.content.startsWith(prefix)) return;
+    const args = msg.content.slice(prefix.length).trim().split(/ +/);
+    const cmd = args.shift()?.toLowerCase();
+    if (cmd == null) {return console.log("No command called!");}
+    
+    const handler = commandHandlers[cmd];
+    if (handler) {
+        handler(msg, args);
+    } else {
+        msg.reply("Unknown command. Type $help for a list of commands.");
+    };
+};
+
+export default messageHandling;

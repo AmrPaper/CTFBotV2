@@ -1,6 +1,8 @@
 import {Client, IntentsBitField, ActivityType} from "discord.js";
+import messageHandling from "./CommandManager.js";
+import { config } from "dotenv";
 
-const prefix = "$";
+config();
 
 const client = new Client({
     intents: [
@@ -12,7 +14,7 @@ const client = new Client({
     ],
 });
 
-client.on("ready", (c) => {
+client.on("clientReady", (c) => {
     console.log(`${c.user.tag} is now online!`);
     c.user.setActivity({
         name: "الليلة بالليل 🌙",
@@ -22,6 +24,7 @@ client.on("ready", (c) => {
 
 (async () => {
     try {
+        client.on("messageCreate", messageHandling);
         client.login(process.env.BOT_TOKEN);
     } catch (error) {
         console.log(`Error: ${error}`);
