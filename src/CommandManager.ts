@@ -1,5 +1,6 @@
 import type { Message } from "discord.js";
 import init from "./commands/admin/init.js";
+import phase from "./commands/player/phase.js";
 
 const prefix = "$";
 
@@ -7,6 +8,7 @@ type commandHandler = (msg: Message, args: string[]) => void | Promise<void>;
 
 const commandHandlers: Record<string, commandHandler> = {
     "init": init,
+    "phase": phase,
     "blip": async (msg) => {
         if (!msg.guild) {return console.log("Invalid Operation, no dms");}
         const user = await msg.guild.members.fetch(msg.author.id)
