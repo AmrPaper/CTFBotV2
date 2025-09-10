@@ -2,6 +2,7 @@ import type { Message } from "discord.js";
 import init from "./commands/admin/init.js";
 import phase from "./commands/player/phase.js";
 import { lock, unlock } from "./commands/admin/flowControl.js"
+import { browseLibrary } from "./commands/admin/challengeSet.js";
 
 const prefix = "$";
 
@@ -12,6 +13,7 @@ const commandHandlers: Record<string, commandHandler> = {
     "phase": phase,
     "lock": lock,
     "unlock": unlock,
+    "browse": browseLibrary,
     "blip": async (msg) => {
         if (!msg.guild) {return console.log("Invalid Operation, no dms");}
         const user = await msg.guild.members.fetch(msg.author.id)

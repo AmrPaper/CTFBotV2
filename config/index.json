@@ -1,6 +1,18 @@
 {
-    "activeSet": "template",
-    "sets": {
-        "1": "./config/template.json"
-    }
+    "activeSetID": 0,
+    "activeSetName": "template",
+    "sets": [
+        {
+            "id": 0,
+            "name": "Template Challenge Set",
+            "description": "An empty template challenge set for author reference",
+            "fileLocation": "./config/template.json"
+        },
+        {
+            "id": 1,
+            "name": "Missing Person: Etti Morales",
+            "description": "My first CTF revolving around a missing person's case of a college student, contains two seperate endings",
+            "fileLocation": "../challenge_sets/etti.json"
+        }
+    ]
 }
