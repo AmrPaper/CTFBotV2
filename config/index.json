@@ -1,6 +1,7 @@
 {
     "activeSetID": 0,
     "activeSetName": "template",
+    "availableSets": 2,
     "sets": [
         {
             "id": 0,
