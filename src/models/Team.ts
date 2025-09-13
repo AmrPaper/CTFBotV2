@@ -7,6 +7,7 @@ export interface Team extends Document {
     roleID: string;
     channelID: string;
     colour: string;
+    phaseStartTime: Date;
     establishedAt: Date;
     lastActive: Date;
 }
@@ -18,6 +19,7 @@ const teamSchema = new Schema<Team>({
     roleID: {type: String, required: true},
     channelID: {type: String, required: true},
     colour: {type: String, required: true},
+    phaseStartTime: {type: Date, default: null},
     establishedAt: {type: Date, default: Date.now},
     lastActive: {type: Date, default: Date.now}
 });

@@ -26,20 +26,22 @@
             "color": "#F0F0F0"
         }
     ],
-    "endings": {
-        "ending1": {
+    "endings": [
+        {
+            "endingID": 1,
             "title": "ending title",
             "description": "ending description",
             "color": "#FFFFFF",
             "message": "ending message",
             "condition": "LT"
         },
-        "ending2": {
+        {
+            "endingID": 2,
             "title": "ending title",
             "description": "ending description",
             "color": "#FFFFFF",
             "message": "ending message",
             "condition": "LT"
         }
-    }
+    ]
 }

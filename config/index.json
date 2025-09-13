@@ -1,19 +1,18 @@
 {
-    "activeSetID": 0,
-    "activeSetName": "template",
-    "availableSets": 2,
+    "activeSetID": "etti",
+    "activeSetName": "Missing Person: Etti Morales",
     "sets": [
         {
-            "id": 0,
+            "id": "template",
             "name": "Template Challenge Set",
             "description": "An empty template challenge set for author reference",
-            "fileLocation": "./config/template.json"
+            "path": "./config/template.json"
         },
         {
-            "id": 1,
+            "id": "etti",
             "name": "Missing Person: Etti Morales",
             "description": "My first CTF revolving around a missing person's case of a college student, contains two seperate endings",
-            "fileLocation": "../challenge_sets/etti.json"
+            "path": "./challenge_sets/etti.json"
         }
     ]
 }

@@ -4,7 +4,10 @@
   "description": "An all new and improved version of my multiplayer event management bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "copyfiles -u 0 config/**/* challenge_sets/**/* dist/",
+    "dev": "npm run build && node dist/src/index.js",
+    "start": "node dist/Index.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +29,7 @@
     "zod": "^4.1.1"
   },
   "devDependencies": {
+    "copyfiles": "^2.4.1",
     "typescript": "^5.9.2"
   },
   "type": "module"
