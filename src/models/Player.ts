@@ -1,17 +1,19 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, ObjectId } from 'mongoose';
+import { ITeam } from './Team';
 
-export interface Player extends Document {
-    _id: string;
+export interface IPlayer extends Document {
+    _id: ObjectId;
+    discordId: string;
     name: string;
     currentPhase: number;
-    team?: string;
-    phaseStartTime: Date;
+    team?: ITeam | null;
+    phaseStartTime: Date | null;
     joinedAt: Date;
     lastActive: Date;
 }
 
-const playerSchema = new Schema<Player>({
-    _id: {type: String, required: true},
+const playerSchema = new Schema<IPlayer>({
+    discordId: {type: String, required: true},
     name: {type: String, required: true},
     currentPhase: {type: Number, default: 1, required: true},
     team: {type: Schema.Types.ObjectId, ref: 'Team', default: null},
@@ -20,4 +22,4 @@ const playerSchema = new Schema<Player>({
     lastActive: {type: Date, default: Date.now}
 });
 
-export const Player = model<Player>('Player', playerSchema);
+export const Player = model<IPlayer>('Player', playerSchema);

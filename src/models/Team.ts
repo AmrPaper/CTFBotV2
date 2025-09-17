@@ -1,8 +1,9 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, ObjectId } from 'mongoose';
 
-export interface Team extends Document {
+export interface ITeam extends Document {
+    _id: ObjectId;
     name: string;
-    members: string[];
+    members: ObjectId[];
     currentPhase: number;
     roleID: string;
     channelID: string;
@@ -12,9 +13,9 @@ export interface Team extends Document {
     lastActive: Date;
 }
 
-const teamSchema = new Schema<Team>({
+const teamSchema = new Schema<ITeam>({
     name: {type: String, required: true, unique: true},
-    members: [{type: String, ref: 'Player'}],
+    members: [{type: Schema.Types.ObjectId, ref: 'Player'}],
     currentPhase: {type: Number, default: 1, required: true},
     roleID: {type: String, required: true},
     channelID: {type: String, required: true},
@@ -24,4 +25,4 @@ const teamSchema = new Schema<Team>({
     lastActive: {type: Date, default: Date.now}
 });
 
-export const Team = model<Team>('Team', teamSchema);
+export const Team = model<ITeam>('Team', teamSchema);

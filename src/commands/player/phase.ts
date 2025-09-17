@@ -15,6 +15,9 @@ async function phase(msg: Message, args: string[]): Promise<void> {
 
     try {
         const challengeContent = await grabChallengeSet();
+        if (!challengeContent) {
+            throw new Error(`grabChallengeSet function has failed`);
+        }
 
         let requestedPhase: number = Number(args[0]);
         if (requestedPhase>challengeContent.phases.length - 1) {

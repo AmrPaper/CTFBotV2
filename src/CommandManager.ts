@@ -3,6 +3,9 @@ import init from "./commands/admin/init.js";
 import phase from "./commands/player/phase.js";
 import { lock, unlock } from "./commands/admin/flowControl.js"
 import { browseLibrary, selectChallengeSet } from "./commands/admin/challengeSet.js";
+import join from "./commands/player/join.js";
+import resetProgress from "./commands/player/reset.js";
+import leave from "./commands/player/leave.js";
 
 const prefix = "$";
 
@@ -15,6 +18,9 @@ const commandHandlers: Record<string, commandHandler> = {
     "unlock": unlock,
     "browse": browseLibrary,
     "select": selectChallengeSet,
+    "join": join,
+    "leave": leave,
+    "reset": resetProgress,
     "blip": async (msg) => {
         if (!msg.guild) {return console.log("Invalid Operation, no dms");}
         const user = await msg.guild.members.fetch(msg.author.id)

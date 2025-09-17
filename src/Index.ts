@@ -22,18 +22,18 @@ client.on("clientReady", async (c) => {
         type: ActivityType.Listening
     });
 
-    // const uri = process.env.MONGODB_URI;
-    // if (!uri) {
-    //     console.error("MongoDB uri is undefined, please revise the env file.");
-    //     process.exit(1);
-    // }
-    // try {
-    //     await mongoose.connect(uri);
-    //     console.log("Successfully connected to mongoDB.");
-    // } catch (error) {
-    //     console.error("Failed to connect to mongoDB");
-    //     process.exit(1);
-    // }
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+        console.error("MongoDB uri is undefined, please revise the env file.");
+        process.exit(1);
+    }
+    try {
+        await mongoose.connect(uri);
+        console.log("Successfully connected to mongoDB.");
+    } catch (error) {
+        console.error("Failed to connect to mongoDB");
+        process.exit(1);
+    }
 });
 
 (async () => {

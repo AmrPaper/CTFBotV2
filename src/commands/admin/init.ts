@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 async function init(msg: Message): Promise<void> {
     if (!msg.guild) {return console.log("Invalid Operation, no dms");}
 
-    const user = await msg.guild.members.fetch(msg.author.id)
+    const user = await msg.guild.members.fetch(msg.author.id);
     if (!user.permissions.has("Administrator")) {
         msg.reply("You do not have the permission to initialise the event.");
         return console.log(`User ${user.displayName} does not have permission to use the Init command.`);
