@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && npm run copy-assets",
     "copy-assets": "copyfiles -u 0 config/**/* challenge_sets/**/* dist/",
-    "dev": "npm run build && node dist/src/index.js",
+    "dev": "npm run build && node dist/Index.js",
     "start": "node dist/Index.js"
   },
   "repository": {

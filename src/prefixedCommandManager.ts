@@ -1,5 +1,4 @@
 import type { Message } from "discord.js";
-import init from "./commands/admin/init.js";
 import phase from "./commands/player/phase.js";
 import { lock, unlock } from "./commands/admin/flowControl.js"
 import { browseLibrary, selectChallengeSet } from "./commands/admin/challengeSet.js";
@@ -12,7 +11,6 @@ const prefix = "$";
 type commandHandler = (msg: Message, args: string[]) => void | Promise<void>;
 
 const commandHandlers: Record<string, commandHandler> = {
-    "init": init,
     "phase": phase,
     "lock": lock,
     "unlock": unlock,

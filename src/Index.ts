@@ -1,7 +1,8 @@
 import {Client, IntentsBitField, ActivityType} from "discord.js";
 import mongoose from "mongoose";
-import messageHandling from "./CommandManager.js";
+import messageHandling from "./prefixedCommandManager.js";
 import { config } from "dotenv";
+import { handleSlashCommands, registerSlashCommands } from "./slashCommandManager.js";
 
 config();
 
@@ -34,11 +35,18 @@ client.on("clientReady", async (c) => {
         console.error("Failed to connect to mongoDB");
         process.exit(1);
     }
+
+    await registerSlashCommands();
 });
 
 (async () => {
     try {
         client.on("messageCreate", messageHandling);
+        client.on("interactionCreate", async (interaction) => {
+            if (interaction.isChatInputCommand()) {
+                await handleSlashCommands(interaction);
+            }
+        });
 
         const token = process.env.BOT_TOKEN;
         if (!token) {

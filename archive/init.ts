@@ -31,4 +31,4 @@ async function init(msg: Message): Promise<void> {
     }
 }
 
-export default init;
+// export default init;
