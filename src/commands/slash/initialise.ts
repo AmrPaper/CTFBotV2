@@ -22,13 +22,14 @@ async function initialise(interaction: ChatInputCommandInteraction): Promise<voi
 
         const Player = await interaction.guild.roles.create({
             name: 'Player',
-            color: '#c3b058',
+            colors: { primaryColor: '#c3b058'},
             mentionable: true
         });
 
         const Organiser = await interaction.guild.roles.create({
             name: 'Organiser',
-            color: '#8cefae',
+            colors: { primaryColor: '#8cefae' },
+            hoist: true,
             mentionable: true,
             position: Player.position + 1
         });
