@@ -5,7 +5,7 @@ async function resetProgress(msg: Message): Promise<void> {
     try {
         if (!msg.guild || !msg.member) {return console.log("Invalid Operation, no dms");}
 
-        const player = await grabPlayerDB(msg.member.id, true);
+        const player = await grabPlayerDB(msg.member.id, { logIfNotFound: true });
         if (!player) {
             msg.reply("You are not registered in the current event.");
             return;

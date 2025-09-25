@@ -5,7 +5,7 @@ async function registerTeam(interaction: ChatInputCommandInteraction): Promise<v
     if (!interaction.guild) {
         await interaction.reply({
             content: "This command can only be used within a server.",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
         return;
     }
@@ -98,7 +98,7 @@ async function registerTeam(interaction: ChatInputCommandInteraction): Promise<v
         } else {
             await interaction.reply({
                 content: "There was an error during team registration, please try again.",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
     }

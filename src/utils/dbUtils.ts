@@ -1,19 +1,20 @@
+import { error } from "winston";
 import { Player, IPlayer } from "../models/Player.js";
 import { Team, ITeam } from "../models/Team.js";
 
-export async function grabPlayerDB(discordId: string, logIfNotFound: boolean, options?: { populateTeam?: boolean}): Promise<IPlayer | null>  {
+export async function grabPlayerDB(discordId: string, options?: { populateTeam?: boolean, logIfNotFound?: boolean}): Promise<IPlayer | null>  {
     let query = Player.findOne({discordId: discordId});
     if (options?.populateTeam) query = query.populate("team");
     const player = await query;
-    if (!player && logIfNotFound) console.error(`Failed to fetch player with id ${discordId}`);
+    if (!player && options?.logIfNotFound) console.error(`Failed to fetch player with id ${discordId}`);
     return player;
 }
 
-export async function grabTeamDB(teamName: string, logIfNotFound: boolean, options?: { populateMembers?: boolean}): Promise<ITeam | null> {
+export async function grabTeamDB(teamName: string, options?: { populateMembers?: boolean, logIfNotFound?: boolean}): Promise<ITeam | null> {
     let query = Team.findOne({name: teamName});
     if (options?.populateMembers) query = query.populate("members");
     const team = await query;
-    if (!team && logIfNotFound) console.error(`Failed to fetch team with the name ${teamName}`);
+    if (!team && options?.logIfNotFound) console.error(`Failed to fetch team with the name ${teamName}`);
     return team;
 }
 
@@ -61,5 +62,17 @@ export async function deletePlayerDB(discordId: string): Promise<boolean> {
     } catch (error) {
         console.error(`Failed to delete player with id ${discordId}, please review the player's database entry to ensure nothing occured to the team.`, error);
         return false;
+    }
+}
+
+export async function syncPlayerWithTeam(discordID: string, team: ITeam) {
+    const success = await updatePlayerDB(discordID, {
+        currentPhase: team.currentPhase,
+        phaseStartTime: team.phaseStartTime,
+        team: team._id
+    });
+
+    if (!success) {
+        throw new Error(`Failed to sync player ${discordID} with team ${team.name}`);
     }
 }

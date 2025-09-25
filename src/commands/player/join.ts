@@ -6,7 +6,7 @@ async function join(msg: Message): Promise<void> {
         if (!msg.guild || !msg.member) {return console.log("Invalid Operation, no dms");}
 
         const user = await msg.guild.members.fetch(msg.author.id);
-        const player = await grabPlayerDB(user.id, false);
+        const player = await grabPlayerDB(user.id, { logIfNotFound: false });
         if (!player) {
             const playerData = {
                 discordId : user.id,

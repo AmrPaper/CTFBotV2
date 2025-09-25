@@ -1,12 +1,11 @@
 import { Schema, model, Document, ObjectId } from 'mongoose';
-import { ITeam } from './Team';
 
 export interface IPlayer extends Document {
     _id: ObjectId;
     discordId: string;
     name: string;
     currentPhase: number;
-    team?: ITeam | null;
+    team?: ObjectId | null;
     phaseStartTime: Date | null;
     joinedAt: Date;
     lastActive: Date;

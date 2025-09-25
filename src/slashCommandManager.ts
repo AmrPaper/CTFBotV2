@@ -2,6 +2,9 @@ import { SlashCommandBuilder, REST, Routes, ChatInputCommandInteraction, Client 
 import { config } from "dotenv";
 import initialise from "./commands/slash/initialise.js";
 import registerTeam from "./commands/slash/registerTeam.js";
+import addPlayer from "./commands/slash/addPlayer.js";
+import forceJoin from "./commands/slash/forceJoin.js";
+import forceLeave from "./commands/slash/forceLeave.js";
 
 config();
 
@@ -18,14 +21,14 @@ const commands = [
         .setDefaultMemberPermissions("0")
         .addStringOption(option =>
             option.setName("teamname")
-                .setDescription("Name of the team")
+                .setDescription("Name of the team.")
                 .setRequired(true)
                 .setMaxLength(50)
                 .setMinLength(2)
         )
         .addStringOption(option =>
             option.setName("color")
-                .setDescription("Team's discord role color")
+                .setDescription("Team's discord role color.")
                 .setRequired(true)
                 .addChoices(
                     { name: '🔥 Red', value: '#FF0000' },
@@ -47,7 +50,52 @@ const commands = [
                 .setMaxLength(7)
                 .setMinLength(7)
         )
-        .toJSON()
+        .toJSON(),
+    new SlashCommandBuilder()
+        .setName("add-player-to-team")
+        .setDescription("Adds mentioned players to a selected team.")
+        .setDefaultMemberPermissions("0")
+        .addRoleOption(option =>
+            option.setName("team")
+                .setDescription("The team you'd like to add players to.")
+                .setRequired(true)
+        )
+        .addUserOption(option =>
+            option.setName("player1")
+                .setDescription("Select the first player.")
+                .setRequired(true)
+        )
+        .addUserOption(option =>
+            option.setName("player2")
+                .setDescription("Select the second player.")
+                .setRequired(false)
+        )
+        .addUserOption(option =>
+            option.setName("player3")
+                .setDescription("Select the third player.")
+                .setRequired(false)
+        )
+        .toJSON(),
+    new SlashCommandBuilder()
+        .setName("force-register-player")
+        .setDescription("Registers a player selected player into the event.")
+        .setDefaultMemberPermissions("0")
+        .addUserOption(option =>
+            option.setName("user")
+                .setDescription("Target user to be registered.")
+                .setRequired(true)
+        )
+        .toJSON(),
+    new SlashCommandBuilder()
+        .setName("force-remove-player")
+        .setDescription("Registers a player selected player into the event.")
+        .setDefaultMemberPermissions("0")
+        .addUserOption(option =>
+            option.setName("user")
+                .setDescription("Target user to be registered.")
+                .setRequired(true)
+        )
+        .toJSON(),
 ]
 
 export async function registerSlashCommands() {
@@ -88,4 +136,7 @@ export async function handleSlashCommands(interaction: ChatInputCommandInteracti
 
     if (commandName === "initialise") {await initialise(interaction);}
     else if (commandName === "register-team") {await registerTeam(interaction);}
+    else if (commandName === "add-player-to-team") {await addPlayer(interaction);}
+    else if (commandName === "force-register-player") {await forceJoin(interaction);}
+    else if (commandName === "force-remove-player") {await forceLeave(interaction);}
 }
