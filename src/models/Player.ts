@@ -1,14 +1,20 @@
 import { Schema, model, Document, ObjectId } from 'mongoose';
+import { ITeamBase } from './Team';
 
-export interface IPlayer extends Document {
+export interface IPlayerBase extends Document {
     _id: ObjectId;
     discordId: string;
     name: string;
     currentPhase: number;
-    team?: ObjectId | null;
     phaseStartTime: Date | null;
     joinedAt: Date;
     lastActive: Date;
+}
+export interface IPlayer extends IPlayerBase {
+    team?: ObjectId | null;
+}
+export interface IPlayerPopulated extends Omit<IPlayer, "team"> {
+    team?: ITeamBase | null;
 }
 
 const playerSchema = new Schema<IPlayer>({

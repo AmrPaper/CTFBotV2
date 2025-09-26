@@ -1,9 +1,9 @@
 import { Schema, model, Document, ObjectId } from 'mongoose';
+import { IPlayer } from './Player';
 
-export interface ITeam extends Document {
+export interface ITeamBase extends Document {
     _id: ObjectId;
     name: string;
-    members: ObjectId[];
     currentPhase: number;
     roleID: string;
     channelID: string;
@@ -11,6 +11,14 @@ export interface ITeam extends Document {
     phaseStartTime: Date;
     establishedAt: Date;
     lastActive: Date;
+}
+
+export interface ITeam extends ITeamBase {
+    members: ObjectId[];
+}
+
+export interface ITeamPopulated extends ITeamBase {
+    members: IPlayer[];
 }
 
 const teamSchema = new Schema<ITeam>({

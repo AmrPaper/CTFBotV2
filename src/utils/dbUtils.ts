@@ -1,8 +1,9 @@
-import { error } from "winston";
-import { Player, IPlayer } from "../models/Player.js";
-import { Team, ITeam } from "../models/Team.js";
+import { Player, IPlayer, IPlayerPopulated } from "../models/Player.js";
+import { Team, ITeam, ITeamPopulated } from "../models/Team.js";
 
-export async function grabPlayerDB(discordId: string, options?: { populateTeam?: boolean, logIfNotFound?: boolean}): Promise<IPlayer | null>  {
+export async function grabPlayerDB(discordId: string, options?: { populateTeam?: false, logIfNotFound?: boolean}): Promise<IPlayer | null>
+export async function grabPlayerDB(discordId: string, options: { populateTeam: true, logIfNotFound?: boolean}): Promise<IPlayerPopulated | null>
+export async function grabPlayerDB(discordId: string, options?: { populateTeam?: boolean, logIfNotFound?: boolean}): Promise<IPlayer | IPlayerPopulated | null>  {
     let query = Player.findOne({discordId: discordId});
     if (options?.populateTeam) query = query.populate("team");
     const player = await query;
@@ -10,7 +11,9 @@ export async function grabPlayerDB(discordId: string, options?: { populateTeam?:
     return player;
 }
 
-export async function grabTeamDB(teamName: string, options?: { populateMembers?: boolean, logIfNotFound?: boolean}): Promise<ITeam | null> {
+export async function grabTeamDB(teamName: string, options?: { populateMembers?: false, logIfNotFound?: boolean}): Promise<ITeam | null>
+export async function grabTeamDB(teamName: string, options: { populateMembers: true, logIfNotFound?: boolean}): Promise<ITeamPopulated | null>
+export async function grabTeamDB(teamName: string, options?: { populateMembers?: boolean, logIfNotFound?: boolean}): Promise<ITeam| ITeamPopulated | null> {
     let query = Team.findOne({name: teamName});
     if (options?.populateMembers) query = query.populate("members");
     const team = await query;
@@ -65,7 +68,7 @@ export async function deletePlayerDB(discordId: string): Promise<boolean> {
     }
 }
 
-export async function syncPlayerWithTeam(discordID: string, team: ITeam) {
+export async function syncPlayerWithTeam(discordID: string, team: ITeam): Promise<void> {
     const success = await updatePlayerDB(discordID, {
         currentPhase: team.currentPhase,
         phaseStartTime: team.phaseStartTime,
@@ -75,4 +78,25 @@ export async function syncPlayerWithTeam(discordID: string, team: ITeam) {
     if (!success) {
         throw new Error(`Failed to sync player ${discordID} with team ${team.name}`);
     }
+}
+
+export async function syncTeamMembers(teamName: string): Promise<void> {
+    let targetTeam = await grabTeamDB(teamName, { populateMembers: true, logIfNotFound: true })
+    if (!targetTeam) {throw new Error("Could not retrieve team.");}
+    const results: string[] = [];
+    const errors: string[] = [];
+    for (let player of targetTeam.members) {
+        let success = await updatePlayerDB(player.discordId, {
+            currentPhase: targetTeam.currentPhase,
+            phaseStartTime: targetTeam.phaseStartTime
+        });
+
+        if (!success) {
+            errors.push(`Failed to sync ${player.name} with the team`);
+        } else {
+            results.push(`Successfully synced ${player.name} with the team`);
+        }
+    }
+    const message = [...results, ...errors].join('\n');
+    console.log(message);
 }
