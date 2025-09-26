@@ -5,6 +5,7 @@ import registerTeam from "./commands/slash/registerTeam.js";
 import addPlayer from "./commands/slash/addPlayer.js";
 import forceJoin from "./commands/slash/forceJoin.js";
 import forceLeave from "./commands/slash/forceLeave.js";
+import removePlayer from "./commands/slash/removePlayer.js";
 
 config();
 
@@ -96,6 +97,16 @@ const commands = [
                 .setRequired(true)
         )
         .toJSON(),
+    new SlashCommandBuilder()
+        .setName("remove-player-from-team")
+        .setDescription("Remove the mentioned player from their team.")
+        .setDefaultMemberPermissions("0")
+        .addUserOption(option =>
+            option.setName("user")
+                .setDescription("Target user to be removed.")
+                .setRequired(true)
+        )
+        .toJSON()
 ]
 
 export async function registerSlashCommands() {
@@ -139,4 +150,5 @@ export async function handleSlashCommands(interaction: ChatInputCommandInteracti
     else if (commandName === "add-player-to-team") {await addPlayer(interaction);}
     else if (commandName === "force-register-player") {await forceJoin(interaction);}
     else if (commandName === "force-remove-player") {await forceLeave(interaction);}
+    else if (commandName === "remove-player-from-team") {await removePlayer(interaction);}
 }

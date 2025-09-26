@@ -38,6 +38,10 @@ async function addPlayer(interaction: ChatInputCommandInteraction): Promise<void
             if (targetPlayer.team) {
                 errors.push(`${player.displayName} is already in a team.`);
                 continue;
+            }
+            if (targetTeam.members.length >=3) {
+                errors.push(`The team ${targetTeam.name} is full`);
+                continue;
             } else {
                 try {
                     targetTeam.members.push(targetPlayer._id);
