@@ -30,7 +30,7 @@ async function removePlayer(interaction: ChatInputCommandInteraction): Promise<v
             { $pull: { members: player._id } }
         );
 
-        const success = await updatePlayerDB(player.discordId, {currentPhase: 1, phaseStartTime: null, team: null});
+        const success = await updatePlayerDB(player.discordId, {currentPhase: 0, phaseStartTime: null, team: null});
         if (!success) {
             interaction.followUp("Failed to reset player progress and remove them from their team. Please contact an admin if the issue persists.");                    return;
         } else {

@@ -81,22 +81,26 @@ export async function syncPlayerWithTeam(discordID: string, team: ITeam): Promis
 }
 
 export async function syncTeamMembers(teamName: string): Promise<void> {
-    let targetTeam = await grabTeamDB(teamName, { populateMembers: true, logIfNotFound: true })
-    if (!targetTeam) {throw new Error("Could not retrieve team.");}
-    const results: string[] = [];
-    const errors: string[] = [];
-    for (let player of targetTeam.members) {
-        let success = await updatePlayerDB(player.discordId, {
-            currentPhase: targetTeam.currentPhase,
-            phaseStartTime: targetTeam.phaseStartTime
-        });
+    try {
+        let targetTeam = await grabTeamDB(teamName, { populateMembers: true, logIfNotFound: true })
+        if (!targetTeam) {throw new Error("Could not retrieve team.");}
+        const results: string[] = [];
+        const errors: string[] = [];
+        for (let player of targetTeam.members) {
+            let success = await updatePlayerDB(player.discordId, {
+                currentPhase: targetTeam.currentPhase,
+                phaseStartTime: targetTeam.phaseStartTime
+            });
 
-        if (!success) {
-            errors.push(`Failed to sync ${player.name} with the team`);
-        } else {
-            results.push(`Successfully synced ${player.name} with the team`);
+            if (!success) {
+                errors.push(`Failed to sync ${player.name} with the team`);
+            } else {
+                results.push(`Successfully synced ${player.name} with the team`);
+            }
         }
+        const message = [...results, ...errors].join('\n');
+        console.log(message);
+    } catch(error) {
+        throw new Error("Error updating team member data.");
     }
-    const message = [...results, ...errors].join('\n');
-    console.log(message);
 }

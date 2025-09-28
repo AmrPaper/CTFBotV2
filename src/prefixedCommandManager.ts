@@ -5,6 +5,7 @@ import { browseLibrary, selectChallengeSet } from "./commands/admin/challengeSet
 import join from "./commands/player/join.js";
 import resetProgress from "./commands/player/reset.js";
 import leave from "./commands/player/leave.js";
+import submit from "./commands/player/submit.js";
 
 const prefix = "$";
 
@@ -12,6 +13,7 @@ type commandHandler = (msg: Message, args: string[]) => void | Promise<void>;
 
 const commandHandlers: Record<string, commandHandler> = {
     "phase": phase,
+    "submit": submit,
     "lock": lock,
     "unlock": unlock,
     "browse": browseLibrary,
