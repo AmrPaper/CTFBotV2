@@ -13,17 +13,22 @@ async function forceJoin(interaction: ChatInputCommandInteraction): Promise<void
     const target = interaction.options.getUser("user", true);
     
     try {
-        interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        const playerRole = await interaction.guild.roles.cache.find(r => r.name === "Player");
         const member = await interaction.guild.members.fetch(target.id);
         const player = await grabPlayerDB(target.id, {logIfNotFound: false});
+
+        if (!playerRole) {throw new Error("Failed to fetch player role.")}
 
         if (!player) {
             const playerData = {
                 discordId: member.id,
                 name: member.displayName
             }
+            await member.roles.add(playerRole);
             const success = await createPlayerDB(playerData);
             if (!success) {
+                await member.roles.remove(playerRole);
                 throw new Error("Failed to create new player entry in DB");
             } else {
                 console.log(`Player ${playerData.name} (${playerData.discordId}) has joined the event!`)

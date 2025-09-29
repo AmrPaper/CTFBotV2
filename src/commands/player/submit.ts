@@ -1,6 +1,6 @@
 import { Message, EmbedBuilder, ColorResolvable } from "discord.js";
 import { getState } from "../../utils/lockState.js";
-import { grabPlayerDB, grabTeamDB, syncTeamMembers, updatePlayerDB, updateTeamDB } from "../../utils/dbUtils.js";
+import { grabPlayerDB, syncTeamMembers, updatePlayerDB, updateTeamDB } from "../../utils/dbUtils.js";
 import { grabChallengeSet } from "../admin/challengeSet.js";
 import { IPlayerPopulated } from "../../models/Player.js";
 import { Ending, Phase } from "../../utils/jsonTypes.js";
@@ -89,12 +89,12 @@ async function submit(msg: Message, args: string[]): Promise<void> {
             },);
 
             if (!player.team) {
-                const success = await updatePlayerDB(player.discordId, {currentPhase: playerPhase + 1})
+                const success = await updatePlayerDB(player.discordId, {currentPhase: playerPhase + 1, phaseStartTime: Date.now()})
                 if (!success) {throw new Error("Failed to update player progress.");}
                 msg.reply({embeds: [phaseSuccessMessage]});
                 return console.log(`${player.name} has moved onto phase ${relevantPhase.id + 1}!`);
             } else {
-                const success = await updateTeamDB(player.team.name, {currentPhase: playerPhase + 1});
+                const success = await updateTeamDB(player.team.name, {currentPhase: playerPhase + 1, phaseStartTime: Date.now()});
                 if (!success) {throw new Error("Failed to update team progress.");}
                 await syncTeamMembers(player.team.name);
                 msg.reply({embeds: [phaseSuccessMessage]});

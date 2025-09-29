@@ -14,7 +14,8 @@ async function removePlayer(interaction: ChatInputCommandInteraction): Promise<v
     const target = interaction.options.getUser("user", true);
 
     try {
-        interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        const user = await interaction.guild.members.fetch(target.id);
         let player = await grabPlayerDB(target.id, {logIfNotFound: true});
 
         if (!player) {
@@ -25,6 +26,19 @@ async function removePlayer(interaction: ChatInputCommandInteraction): Promise<v
             interaction.followUp("The selected player is not in a team.");
             return;
         }
+
+        const team = await Team.findOne({ members: player._id });
+        if (!team) {
+            interaction.followUp("This player is not in a team.");
+            return;
+        }
+        const teamRole = await interaction.guild.roles.cache.find(r => r.id === team.roleID);
+        if (!teamRole) {
+            interaction.followUp("This player's team is registered in the discord server.");
+            return;
+        }
+        await user.roles.remove(teamRole);
+
         await Team.updateMany(
             { members: player._id },
             { $pull: { members: player._id } }
@@ -32,6 +46,7 @@ async function removePlayer(interaction: ChatInputCommandInteraction): Promise<v
 
         const success = await updatePlayerDB(player.discordId, {currentPhase: 0, phaseStartTime: null, team: null});
         if (!success) {
+            await user.roles.add(teamRole);
             interaction.followUp("Failed to reset player progress and remove them from their team. Please contact an admin if the issue persists.");                    return;
         } else {
             console.log(`Player ${player.name} (${player.discordId}) status updated successfully.`)

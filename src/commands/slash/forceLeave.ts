@@ -13,15 +13,23 @@ async function forceLeave(interaction: ChatInputCommandInteraction): Promise<voi
     const target = interaction.options.getUser("user", true);
     
     try {
-        interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        const user = await interaction.guild.members.fetch(target.id);
         const player = await grabPlayerDB(target.id, {logIfNotFound: true});
+        const playerRole = await interaction.guild.roles.cache.find(r => r.name === "Player");
 
+        if (!playerRole) {throw new Error("Failed to fetch player role.");}
         if (!player) {
             interaction.followUp("The selected player is not registered in the current event.");
             return;
         }
 
-        await deletePlayerDB(player.discordId);
+        await user.roles.remove(playerRole);
+        const success = await deletePlayerDB(player.discordId);
+        if (!success) {
+            await user.roles.add(playerRole);
+            throw new Error("Failed to delete player.");
+        }
         console.log(`Player ${player.name} (${player.discordId}) has been removed from the event!`);
         interaction.followUp(`Player ${player.name} (${player.discordId}) has been removed from the event!`);
     } catch (error) {

@@ -53,18 +53,8 @@ async function phase(msg: Message, args: string[]): Promise<void> {
             return console.log("Player attempted to fetch a future phase.");
         }
 
-        if (!player.team) {
-            const success = await updatePlayerDB(player.discordId, {phaseStartTime: Date.now()})
-            if (!success) {throw new Error("Failed to update player progress.");}
-            msg.reply({embeds: [challengeTxt]});
-            return console.log(`${player.name} phase start time has been captured!`);
-        } else {
-            const success = await updateTeamDB(player.team.name, {phaseStartTime: Date.now()});
-            if (!success) {throw new Error("Failed to update team progress.");}
-            await syncTeamMembers(player.team.name);
-            msg.reply({embeds: [challengeTxt]});
-            return console.log(`Team ${player.team.name} phase start time has been captured!`)
-        }
+        msg.reply({embeds: [challengeTxt]});
+    
     } catch (error) {
         console.error("An error has occured:", error);
         msg.reply("An internal error has occured");
