@@ -6,6 +6,7 @@ import addPlayer from "./commands/slash/addPlayer.js";
 import forceJoin from "./commands/slash/forceJoin.js";
 import forceLeave from "./commands/slash/forceLeave.js";
 import removePlayer from "./commands/slash/removePlayer.js";
+import deleteTeam from "./commands/slash/deleteTeam.js";
 
 config();
 
@@ -89,7 +90,7 @@ const commands = [
         .toJSON(),
     new SlashCommandBuilder()
         .setName("force-remove-player")
-        .setDescription("Registers a player selected player into the event.")
+        .setDescription("Removes the mentioned player from the event.")
         .setDefaultMemberPermissions("0")
         .addUserOption(option =>
             option.setName("user")
@@ -106,7 +107,16 @@ const commands = [
                 .setDescription("Target user to be removed.")
                 .setRequired(true)
         )
-        .toJSON()
+        .toJSON(),
+    new SlashCommandBuilder()
+        .setName("delete-team")
+        .setDescription("Deletes the mentioned team from the event.")
+        .setDefaultMemberPermissions("0")
+        .addRoleOption(option =>
+            option.setName("team")
+                .setDescription("The role of the target team.")
+                .setRequired(true)
+        )
 ]
 
 export async function registerSlashCommands() {
@@ -151,4 +161,5 @@ export async function handleSlashCommands(interaction: ChatInputCommandInteracti
     else if (commandName === "force-register-player") {await forceJoin(interaction);}
     else if (commandName === "force-remove-player") {await forceLeave(interaction);}
     else if (commandName === "remove-player-from-team") {await removePlayer(interaction);}
+    else if (commandName === "delete-team") {await deleteTeam(interaction);}
 }

@@ -10,7 +10,6 @@ export interface ITeamBase extends Document {
     colour: string;
     phaseStartTime: number | null;
     establishedAt: Date;
-    lastActive: Date;
     totalPlaytime: number;
     isPaused: boolean;
     pauseStartTime: number | null;
@@ -33,7 +32,6 @@ const teamSchema = new Schema<ITeam>({
     colour: {type: String, required: true},
     phaseStartTime: {type: Number, default: null},
     establishedAt: {type: Date, default: Date.now},
-    lastActive: {type: Date, default: Date.now},
     totalPlaytime: { type: Number, default: 0 },
     isPaused: { type: Boolean, default: false },
     pauseStartTime: { type: Number, default: null }
