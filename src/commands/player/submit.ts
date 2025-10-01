@@ -31,6 +31,11 @@ async function submit(msg: Message, args: string[]): Promise<void> {
             throw new Error("Failed to fetch player data");
         }
 
+        if (player.isPaused) {
+            msg.reply("The event is currently paused, please try again after the break is over.");
+            return;
+        }
+
         const challengeContent = await grabChallengeSet();
         if (!challengeContent) {
             throw new Error("Failed to fetch challenge content.");
@@ -51,8 +56,9 @@ async function submit(msg: Message, args: string[]): Promise<void> {
         if (args.join(" ") !== relevantPhase.flag) {
             msg.reply("Incorrect flag, please try again 😉");
             return console.log("Player submitted an incorrect flag.");
-        }        
-        
+        }   
+
+        const phaseTime = player.phaseStartTime ? Date.now() - player.phaseStartTime : 0;
         if (playerPhase === phaseCount - 1) {
             const ending = fetchCorrectEnding(player, relevantPhase, challengeContent.endings)
             const endingMessage = new EmbedBuilder()
@@ -66,12 +72,12 @@ async function submit(msg: Message, args: string[]): Promise<void> {
                 });
 
             if (!player.team) {
-                const success = await updatePlayerDB(player.discordId, {currentPhase: playerPhase + 1})
+                const success = await updatePlayerDB(player.discordId, {currentPhase: playerPhase + 1, totalPlaytime: player.totalPlaytime + phaseTime})
                 if (!success) {throw new Error("Failed to update player progress.");}
                 msg.reply({embeds: [endingMessage]});
                 return console.log(`${player.name} has achieved the ending: ${ending.title}`);
             } else {
-                const success = await updateTeamDB(player.team.name, {currentPhase: playerPhase + 1});
+                const success = await updateTeamDB(player.team.name, {currentPhase: playerPhase + 1, totalPlaytime: player.totalPlaytime + phaseTime});
                 if (!success) {throw new Error("Failed to update team progress.");}
                 await syncTeamMembers(player.team.name);
                 msg.reply({embeds: [endingMessage]});
@@ -89,12 +95,12 @@ async function submit(msg: Message, args: string[]): Promise<void> {
             },);
 
             if (!player.team) {
-                const success = await updatePlayerDB(player.discordId, {currentPhase: playerPhase + 1, phaseStartTime: Date.now()})
+                const success = await updatePlayerDB(player.discordId, {currentPhase: playerPhase + 1, totalPlaytime: player.totalPlaytime + phaseTime, phaseStartTime: Date.now()});
                 if (!success) {throw new Error("Failed to update player progress.");}
                 msg.reply({embeds: [phaseSuccessMessage]});
                 return console.log(`${player.name} has moved onto phase ${relevantPhase.id + 1}!`);
             } else {
-                const success = await updateTeamDB(player.team.name, {currentPhase: playerPhase + 1, phaseStartTime: Date.now()});
+                const success = await updateTeamDB(player.team.name, {currentPhase: playerPhase + 1, totalPlaytime: player.totalPlaytime + phaseTime, phaseStartTime: Date.now()});
                 if (!success) {throw new Error("Failed to update team progress.");}
                 await syncTeamMembers(player.team.name);
                 msg.reply({embeds: [phaseSuccessMessage]});

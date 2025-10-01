@@ -19,7 +19,7 @@ async function phase(msg: Message, args: string[]): Promise<void> {
         }
 
         if (!args[0] || isNaN(Number(args[0]))) {
-            msg.reply("Please specify a valide phase.");
+            msg.reply("Please specify a valid phase.");
             return;
         }
         let requestedPhase: number = Number(args[0]);
@@ -32,6 +32,11 @@ async function phase(msg: Message, args: string[]): Promise<void> {
         if (!player) {
             msg.reply("You are not registered in the event.");
             return console.log("User is not registered in the event.");
+        }
+
+        if (player.isPaused) {
+            msg.reply("The event is currently paused, please try again after the break is over.");
+            return;
         }
 
         let phaseContent = challengeContent.phases[requestedPhase];

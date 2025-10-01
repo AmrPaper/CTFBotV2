@@ -9,6 +9,9 @@ export interface IPlayerBase extends Document {
     phaseStartTime: number | null;
     joinedAt: Date;
     lastActive: Date;
+    totalPlaytime: number;
+    isPaused: boolean;
+    pauseStartTime: number | null;
 }
 export interface IPlayer extends IPlayerBase {
     team?: ObjectId | null;
@@ -24,7 +27,10 @@ const playerSchema = new Schema<IPlayer>({
     team: {type: Schema.Types.ObjectId, ref: 'Team', default: null},
     phaseStartTime: {type: Number, default: null},
     joinedAt: {type: Date, default: Date.now},
-    lastActive: {type: Date, default: Date.now}
+    lastActive: {type: Date, default: Date.now},
+    totalPlaytime: { type: Number, default: 0 },
+    isPaused: { type: Boolean, default: false },
+    pauseStartTime: { type: Number, default: null }
 });
 
 export const Player = model<IPlayer>('Player', playerSchema);

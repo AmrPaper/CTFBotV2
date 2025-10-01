@@ -6,6 +6,9 @@ import join from "./commands/player/join.js";
 import resetProgress from "./commands/player/reset.js";
 import leave from "./commands/player/leave.js";
 import submit from "./commands/player/submit.js";
+import leaderboard from "./commands/admin/leaderboard.js";
+import pauseEvent from "./commands/admin/pauseEvent.js";
+import resumeEvent from "./commands/admin/resumeEvent.js";
 
 const prefix = "$";
 
@@ -21,6 +24,9 @@ const commandHandlers: Record<string, commandHandler> = {
     "join": join,
     "leave": leave,
     "reset": resetProgress,
+    "leaderboard": leaderboard,
+    "pause": pauseEvent,
+    "resume": resumeEvent,
     "blip": async (msg) => {
         if (!msg.guild) {return console.log("Invalid Operation, no dms");}
         const user = await msg.guild.members.fetch(msg.author.id)
