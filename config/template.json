@@ -41,7 +41,7 @@
             "description": "ending description",
             "color": "#FFFFFF",
             "message": "ending message",
-            "condition": "LT"
+            "condition": "GT"
         }
     ]
 }

@@ -152,14 +152,25 @@ export async function registerSlashCommands() {
     }
 }
 
+type slashHandler = (interaction: ChatInputCommandInteraction) => void | Promise<void>;
+
+const slashHandlers: Record<string, slashHandler> = {
+    "register-team": registerTeam,
+    "add-player-to-team": addPlayer,
+    "remove-player-from-team": removePlayer,
+    "delete-team": deleteTeam,
+    "force-register-player": forceJoin,
+    "force-remove-player": forceLeave,
+    "initialise": initialise
+}
+
 export async function handleSlashCommands(interaction: ChatInputCommandInteraction): Promise<void> {
     const { commandName } = interaction;
 
-    if (commandName === "initialise") {await initialise(interaction);}
-    else if (commandName === "register-team") {await registerTeam(interaction);}
-    else if (commandName === "add-player-to-team") {await addPlayer(interaction);}
-    else if (commandName === "force-register-player") {await forceJoin(interaction);}
-    else if (commandName === "force-remove-player") {await forceLeave(interaction);}
-    else if (commandName === "remove-player-from-team") {await removePlayer(interaction);}
-    else if (commandName === "delete-team") {await deleteTeam(interaction);}
+    const handler = slashHandlers[commandName];
+    if (handler) {
+        handler(interaction);
+    } else {
+        interaction.reply("This command has not been registered under the bot's handler, please contact an admin.");
+    }
 }

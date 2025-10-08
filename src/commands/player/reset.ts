@@ -15,7 +15,7 @@ async function resetProgress(msg: Message): Promise<void> {
             return;
         }
 
-        const success = await updatePlayerDB(player.discordId, {currentPhase: 0, phaseStartTime: null});
+        const success = await updatePlayerDB(player.discordId, {currentPhase: 0, phaseStartTime: null, totalPlaytime: 0});
         if (!success) {
             msg.reply("Failed to reset your progress. Please contact an admin if the issue persists.");
             return;
