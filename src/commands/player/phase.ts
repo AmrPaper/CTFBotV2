@@ -6,12 +6,6 @@ import { grabPlayerDB, syncTeamMembers, updatePlayerDB, updateTeamDB } from "../
 async function phase(msg: Message, args: string[]): Promise<void> {
     if (!msg.guild) {return console.log("Invalid Operation, no dms");}
 
-    let eventLocked = getState();
-    if (eventLocked) {
-        msg.reply("The CTF phases are currently locked, please wait until an admin unlocks the challenges.");
-        return console.log("User attempted to begin play.");
-    }
-
     try {
         const challengeContent = await grabChallengeSet();
         if (!challengeContent) {
@@ -26,6 +20,12 @@ async function phase(msg: Message, args: string[]): Promise<void> {
         if (requestedPhase>challengeContent.phases.length - 1) {
             msg.reply("Phase Unavailable, please try again");
             return console.log("User requested a non-existent phase");
+        }
+
+        let eventLocked = getState(requestedPhase);
+        if (eventLocked) {
+            msg.reply("The CTF phase you have chosen is currently locked, please wait until an admin unlocks the challenge.");
+            return console.log(`User has attempted to access phase ${requestedPhase}`);
         }
 
         const player = await grabPlayerDB(msg.author.id, {populateTeam: true, logIfNotFound: false});

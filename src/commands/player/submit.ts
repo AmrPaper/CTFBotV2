@@ -1,5 +1,5 @@
 import { Message, EmbedBuilder, ColorResolvable } from "discord.js";
-import { getState } from "../../utils/lockState.js";
+import { getState, phaseCount } from "../../utils/lockState.js";
 import { grabPlayerDB, syncTeamMembers, updatePlayerDB, updateTeamDB } from "../../utils/dbUtils.js";
 import { grabChallengeSet } from "../admin/challengeSet.js";
 import { IPlayerPopulated } from "../../models/Player.js";
@@ -20,12 +20,6 @@ async function submit(msg: Message, args: string[]): Promise<void> {
             return console.log(`An Unregistered player ${msg.author.displayName} attempted to submit a flag.`);
         }
 
-        let eventLocked = getState();
-        if (eventLocked) {
-            msg.reply("The CTF phases are currently locked, therefore submissions are currently unavailable. Please wait until an admin unlocks the challenges.");
-            return console.log("User attempted to begin play.");
-        }
-
         const player = await grabPlayerDB(msg.author.id, {populateTeam: true, logIfNotFound: false});
         if (!player) {
             throw new Error("Failed to fetch player data");
@@ -42,10 +36,15 @@ async function submit(msg: Message, args: string[]): Promise<void> {
         }
 
         const playerPhase: number = player.currentPhase;
-        const phaseCount: number = challengeContent.phases.length;
         if (playerPhase >= phaseCount) {
             msg.reply("You've already completed all the available phases, no more submissions will be accepted from you 😅");
             return console.log("Player already completed the event, no more submissions will be accepted from them.");
+        }
+
+        let eventLocked = getState(playerPhase);
+        if (eventLocked) {
+            msg.reply("The CTF phase you are currently on is locked, therefore submissions are currently unavailable. Please wait until an admin unlocks the challenge.");
+            return console.log("User attempted to begin play.");
         }
 
         const relevantPhase = challengeContent.phases.find(phase => phase.id === playerPhase);
