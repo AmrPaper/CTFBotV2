@@ -10,19 +10,21 @@ export async function lock(msg: Message, args: string[]): Promise<void> {
         return console.log(`User ${user.displayName} does not have permission to use the Lock command.`);
     }
 
-    if (!args[0] || isNaN(Number(args[0]))) {
+    if (!args[0] || !args.every(item => !isNaN(Number(item)))) {
         msg.reply("Please specify a valid phase.");
         return;
     }
-    let requestedPhase: number = Number(args[0]);
-    if (requestedPhase>phaseCount - 1) {
-        msg.reply("Phase Unavailable, please try again");
-        return console.log("User requested a non-existent phase");
+    let requestedPhases = args.map(Number);
+    for (const phase of requestedPhases) {
+        if (phase>phaseCount - 1) {
+            msg.reply("Phase Unavailable, please try again");
+            return console.log("User requested a non-existent phase");
+        }
     }
 
     try {
-        updateState(true, requestedPhase);
-        msg.reply(`Phase ${requestedPhase} is now locked!`);
+        requestedPhases.forEach(phase => updateState(true, phase))
+        msg.reply(`Phase(s) ${requestedPhases} is/are now locked!`);
     } catch (error) {
         console.log(`Error: ${error}`);
         msg.reply("There was an error updating the CTF's state, please try again.");
@@ -38,19 +40,21 @@ export async function unlock(msg: Message, args: string[]): Promise<void> {
         return console.log(`User ${user.displayName} does not have permission to use the Unlock command.`);
     }
 
-    if (!args[0] || isNaN(Number(args[0]))) {
+    if (!args[0] || !args.every(item => !isNaN(Number(item)))) {
         msg.reply("Please specify a valid phase.");
         return;
     }
-    let requestedPhase: number = Number(args[0]);
-    if (requestedPhase>phaseCount - 1) {
-        msg.reply("Phase Unavailable, please try again");
-        return console.log("User requested a non-existent phase");
+    let requestedPhases = args.map(Number);
+    for (const phase of requestedPhases) {
+        if (phase>phaseCount - 1) {
+            msg.reply("Phase Unavailable, please try again");
+            return console.log("User requested a non-existent phase");
+        }
     }
 
     try {
-        updateState(false, requestedPhase);
-        msg.reply(`Phase ${requestedPhase} is now unlocked!`);
+        requestedPhases.forEach(phase => updateState(false, phase))
+        msg.reply(`Phase(s) ${requestedPhases} is/are now unlocked!`);
     } catch (error) {
         console.log(`Error: ${error}`);
         msg.reply("There was an error updatings the CTF's state, please try again.");
