@@ -10,6 +10,8 @@ import leaderboard from "./commands/admin/leaderboard.js";
 import pauseEvent from "./commands/admin/pauseEvent.js";
 import resumeEvent from "./commands/admin/resumeEvent.js";
 import syncTeams from "./commands/admin/syncTeams.js";
+import help from "./commands/player/help.js";
+import adminHelp from "./commands/admin/adminHelp.js";
 
 const prefix = "$";
 
@@ -29,6 +31,8 @@ const commandHandlers: Record<string, commandHandler> = {
     "pause": pauseEvent,
     "resume": resumeEvent,
     "syncteams": syncTeams,
+    "help": help,
+    "adminhelp": adminHelp,
     "blip": async (msg) => {
         if (!msg.guild) {return console.log("Invalid Operation, no dms");}
         const user = await msg.guild.members.fetch(msg.author.id)
